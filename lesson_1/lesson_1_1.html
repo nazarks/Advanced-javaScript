@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Пример использования DOM коллекций</title>
+</head>
+<body>
+<script>
+
+    // На основе исходного массива данных добавьте на страницу набор DOM-элементов в виде
+    // списка.
+    const listData = [
+        'Item 1',
+        'Item 2',
+        'Item 3',
+        'Item 4',
+        'Item 5',
+        [
+            'Item 5.1',
+            'Item 5.2',
+            'Item 5.3',
+        ],
+        'Item 6',
+        'Item 7',
+    ]
+    const ulElem = document.createElement('ul');
+    listData.forEach((item) => {
+        if ((typeof item) == 'string') {
+            const liElem = document.createElement('li');
+            liElem.innerHTML = item;
+            ulElem.appendChild(liElem);
+        } else {
+            const ulInnerElem = document.createElement('ul');
+            item.forEach((elem) => {
+                const liElem = document.createElement('li');
+                liElem.innerHTML = elem;
+                ulInnerElem.appendChild(liElem);
+            })
+            ulElem.appendChild(ulInnerElem);
+        }
+    });
+    document.body.appendChild(ulElem);
+
+    // Для каждого добавленного массива элементов определите длину дочерних элементов.
+    console.log(ulElem.children.length);
+
+    // Получите первый и последний элемент.
+    console.log('First element: ', ulElem.firstChild);
+    console.log('Last element: ', ulElem.lastChild);
+
+    // Переберите все элементы коллекции, выведите значения атрибутов и индекс элемента в коллекции
+    const arrElements = Array.from(ulElem.children);
+    for (let i = 0; i < arrElements.length; i++) {
+        console.log('Index:', i);
+        Array.from(arrElements[i].attributes).forEach((attr) => {
+            console.log(attr);
+        })
+    }
+    // измените стили чётных элементов списка
+    const fieldsetElem = document.querySelectorAll('ul > :nth-child(2n)');
+    fieldsetElem.forEach((elem) => {
+            elem.style.fontWeight = 'bold';
+        }
+    )
+    // Сформируйте исходный массив данных на основе DOM-элементов.
+    const currentUlElement = document.querySelector('ul');
+    currentListData = [];
+    currentUlElement.childNodes.forEach((elem) => {
+        if (elem.tagName === 'LI') {
+            currentListData.push(elem.innerHTML);
+        }
+        if (elem.tagName === 'UL') {
+            const innerUi = [];
+            elem.childNodes.forEach((innerElem) => {
+                innerUi.push(innerElem.innerHTML);
+            })
+            currentListData.push(innerUi);
+        }
+    })
+
+    console.log('List data: ', currentListData);
+</script>
+</body>
+</html>

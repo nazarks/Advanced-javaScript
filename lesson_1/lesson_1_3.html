@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+
+    //   3. На основе исходного массива данных добавьте на страницу набор DOM-элементов в виде
+    // формы с полями.
+    const formData = {
+        name: 'myForm',
+        fieldset: [{
+            tagName: 'select',
+            name: 'cars',
+            id: 'cars',
+            label: 'Choose a car:',
+            options: ['Volvo', 'Saab', 'Honda', 'Toyota', 'Audi'],
+        }, {
+            tagName: 'input',
+            type: 'text',
+            label: 'First name',
+            id: 'fname',
+            name: 'fname',
+        }, {
+            tagName: 'input',
+            type: 'radio',
+            label: 'Male',
+            id: 'male',
+            name: 'gender',
+            value: 'male',
+        }, {
+            tagName: 'input',
+            type: 'radio',
+            label: 'Female',
+            id: 'female',
+            name: 'gender',
+            value: 'female',
+        }, {
+            tagName: 'button',
+            type: 'submit',
+        }],
+    }
+    const formElement = document.createElement('form');
+    const fieldSetElement = document.createElement('fieldset');
+    formElement.name = formData.name;
+
+    formData.fieldset.forEach((element) => {
+        let inputElem = document.createElement(element.tagName);
+        if (element.type) inputElem.type = element.type;
+        if (element.name) inputElem.name = element.name;
+        if (element.id) inputElem.id = element.id;
+        if (element.value) inputElem.value = element.value;
+
+        if (element.options) {
+            for (let i = 0; i < element.options.length; i++) {
+                let newOption = new Option(element.options[i]);
+                inputElem.append(newOption)
+            }
+        }
+        if (element.label) {
+            let inputLabel = document.createElement('label');
+            inputLabel.htmlFor = element.name;
+            inputLabel.textContent = element.label;
+            fieldSetElement.appendChild(inputLabel);
+        }
+        if (element.tagName === 'button') {
+            inputElem.textContent = element.type;
+        }
+        fieldSetElement.appendChild(inputElem);
+    })
+    formElement.appendChild(fieldSetElement);
+    document.body.appendChild(formElement);
+
+    // Для каждого добавленного массива элементов определите длину дочерних элементов.
+    Array.from(fieldSetElement.childNodes).forEach((childNode) => {
+        console.log(childNode.length);
+    })
+
+    // Получите первый и последний элемент.
+    console.log('First element: ', fieldSetElement.firstChild);
+    console.log('Last element: ', fieldSetElement.lastChild);
+
+    // Переберите все элементы коллекции, выведите значения атрибутов и индекс элемента в коллекции
+    const arrElements = Array.from(fieldSetElement.childNodes);
+    for (let i = 0; i < arrElements.length; i++) {
+        console.log('Index:', i);
+        Array.from(arrElements[i].attributes).forEach((attr) => {
+            console.log(attr);
+        })
+    }
+    // Измените стили чётных полей формы;
+    const fieldsetElem = document.querySelectorAll('fieldset > :nth-child(2n)');
+    fieldsetElem.forEach((elem) => {
+            elem.style.marginRight = '20px';
+        }
+    )
+
+    // Сформируйте исходный массив данных на основе DOM-элементов.
+    const currentFieldSetElement = document.querySelector('fieldset');
+    const currentFormElement = document.querySelector('form');
+    let listInput = [];
+    Array.from(currentFieldSetElement.childNodes).forEach((elem) => {
+        if (elem.tagName === 'LABEL') {
+            return;
+        }
+        const elemData = {};
+        elemData['tagName'] = elem.tagName.toLowerCase();
+        if (elem.name) {
+            const labelElem = document.querySelector("[for=" + elem.name + "]");
+            if (labelElem) elemData['label'] = labelElem.innerHTML;
+        }
+
+        Array.from(elem.attributes).forEach((attr) => {
+            elemData[attr.name] = attr.value;
+        })
+        listInput.push(elemData);
+    })
+
+    const currentFormData = {};
+    currentFormData['name'] = currentFormElement.name;
+    currentFormData['fieldset'] = listInput;
+    console.log(currentFormData);
+</script>
+</body>
+</html>
