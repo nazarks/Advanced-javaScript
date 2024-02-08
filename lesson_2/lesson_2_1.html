@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form name="myForm">
+    <fieldset>
+        <label for="cars">Choose a car:</label>
+        <select name="cars" id="cars" style="margin-right: 20px;">
+            <option>Volvo</option>
+            <option>Saab</option>
+            <option>Honda</option>
+            <option>Toyota</option>
+            <option>Audi</option>
+        </select><label for="fname">First name</label>
+        <input type="text" name="fname" id="fname" style="margin-right: 20px;">
+        <label for="male">Male</label>
+        <input type="radio" name="gender" id="male" value="male" style="margin-right: 20px;">
+        <label for="female">Female</label>
+        <input type="radio" name="gender" id="female" value="female" style="margin-right: 20px;">
+        <button type="submit">submit</button>
+    </fieldset>
+</form>
+
+<ul id="myList">
+    <li>Item 1</li>
+    <li>Item 2</li>
+    <li>Item 3</li>
+    <li>Item 4</li>
+    <li>Item 5
+        <ul>
+            <li>Item 5.1</li>
+            <li>Item 5.2</li>
+            <li>Item 5.3</li>
+        </ul>
+    </li>
+    <li>Item 6</li>
+    <li>Item 7</li>
+</ul>
+
+<table class="myTable">
+    <tr>
+        <td>Item 1.1</td>
+        <td>Item 1.2</td>
+        <td>Item 1.3</td>
+    </tr>
+    <tr>
+        <td>Item 2.1</td>
+        <td>Item 2.2</td>
+        <td>Item 2.3</td>
+    </tr>
+    <tr>
+        <td>Item 3.1</td>
+        <td>Item 3.2</td>
+        <td>Item 3.3</td>
+    </tr>
+    <tr>
+        <td class="text-right">Item 4.1</td>
+        <td class="text-left">Item 4.3</td>
+    </tr>
+    <tr>
+        <td>Item 5.1</td>
+        <td>Item 5.2</td>
+        <td>Item 5.3</td>
+    </tr>
+</table>
+
+
+<script>
+// Используя DOM-дерево из задания урока 1, найдите:
+// список с id=”myList”
+console.log(document.querySelector("#myList"));
+
+// Используя DOM-дерево из задания урока 1, найдите:
+// таблицу с class=”myTable”;
+console.log(document.querySelector(".myTable"));
+
+// Используя DOM-дерево из задания урока 1, найдите:
+// форму с name=”myForm”;
+console.log(document.querySelector("form[name='myForm']"));
+
+// Используя DOM-дерево из задания урока 1, найдите:
+// первый и последний input в форме;
+
+const allInput = document.querySelector("form[name='myForm']").querySelectorAll('input');
+console.log('First input:', allInput[0]);
+console.log('Last input:', allInput[allInput.length - 1]);
+
+// Используя DOM-дерево из задания урока 1, найдите:
+// только чекбоксы;
+console.log(document.querySelector("form[name='myForm']").querySelectorAll("input[type='radio']"));
+
+// Используя DOM-дерево из задания урока 1, найдите:
+// все input, кроме чекбоксов;
+allInput.forEach(elem =>{
+    if (elem.type !== 'radio') console.log(elem);
+})
+
+// Используя DOM-дерево из задания урока 1, найдите:
+// все ячейки таблицы, атрибут class которых не содержит дефиса «-».
+const tdList = document.querySelectorAll("td");
+tdList.forEach(elem =>{
+    const classList = elem.classList
+    if (Array.from(classList).filter(function(cl) { return cl.includes('-')}).length === 0) {
+        console.log(elem);
+    }
+})
+
+</script>
+</body>
+</html>
