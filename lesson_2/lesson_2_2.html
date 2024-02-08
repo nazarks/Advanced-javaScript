@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form name="myForm">
+    <fieldset>
+        <label for="cars">Choose a car:</label>
+        <select name="cars" id="cars" style="margin-right: 20px;">
+            <option>Volvo</option>
+            <option>Saab</option>
+            <option>Honda</option>
+            <option>Toyota</option>
+            <option>Audi</option>
+        </select><label for="fname">First name</label>
+        <input type="text" name="fname" id="fname" style="margin-right: 20px;">
+        <label for="male">Male</label>
+        <input type="radio" name="gender" id="male" value="male" style="margin-right: 20px;">
+        <label for="female">Female</label>
+        <input type="radio" name="gender" id="female" value="female" style="margin-right: 20px;">
+        <button type="submit">submit</button>
+    </fieldset>
+</form>
+
+<ul id="myList">
+    <li>Item 1</li>
+    <li>Item 2</li>
+    <li>Item 3</li>
+    <li>Item 4</li>
+    <li>Item 5
+        <ul>
+            <li>Item 5.1</li>
+            <li>Item 5.2</li>
+            <li>Item 5.3</li>
+        </ul>
+    </li>
+    <li>Item 6</li>
+    <li>Item 7</li>
+</ul>
+
+<table class="myTable">
+    <thead>
+    <tr>
+        <th data-type="string">Colum 1</th>
+        <th data-type="string">Colum 2</th>
+        <th data-type="string">Colum 3</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>Item 1.1</td>
+        <td>Item 1.2</td>
+        <td>5</td>
+    </tr>
+    <tr>
+        <td>Item 2.1</td>
+        <td>Item 2.2</td>
+        <td>4</td>
+    </tr>
+    <tr>
+        <td>Item 3.1</td>
+        <td>Item 3.2</td>
+        <td>1</td>
+    </tr>
+    <tr>
+        <td class="text-right">Item 4.1</td>
+        <td class="text-right">Item 4.2</td>
+        <td class="text-left">0</td>
+    </tr>
+    <tr>
+        <td>Item 5.1</td>
+        <td>Item 5.2</td>
+        <td>3</td>
+    </tr>
+    </tbody>
+</table>
+
+
+<script>
+    // Используя делегирование событий, дополнительные CSS-стили и список, таблицу и форму из
+    // урока 1:
+
+    myList = document.querySelector("#myList");
+    myList.addEventListener('click', (e) => {
+        const ulIncluded = e.target.querySelector('ul');
+        if (ulIncluded) {
+            ulIncluded.style.display === 'none' ? ulIncluded.style.display = 'block' : ulIncluded.style.display = 'none';
+        }
+    })
+
+    //  Добавьте таблице возможности сортировки, чтобы при клике на заголовок строки
+    // таблицы сортировались по соответствующему столбцу, а повторный клик по тому же
+    // <th> менял порядок сортировки (возрастание и убывание). Используйте символ «^» в
+    // заголовке таблицы для отображения порядка сортировки.
+
+    const tableElem = document.querySelector('table');
+    tableElem.addEventListener('click', sortTable);
+
+    function sortTable(e) {
+        if (e.target.tagName !== 'TH') return;
+        // если ячейка TH, тогда сортировать
+        // cellNum - это номер ячейки th куда нажали:
+        // dataType - тип данных, для разной сортировки
+        const colNum = e.target.cellIndex;
+        const dataType = e.target.dataset.type;
+        const tbody = tableElem.querySelector('tbody');
+        const rowsArray = Array.from(tbody.rows);
+
+        // Удаляем стрелки из ячеек где не было события
+        const header = tableElem.querySelector('tr');
+        for (let i = 0; i < header.cells.length; i++) {
+            if (i !== colNum) {
+                header.cells[i].innerHTML = header.cells[i].innerHTML.replace('↑', '');
+                header.cells[i].innerHTML = header.cells[i].innerHTML.replace('↓', '');
+            }
+        }
+
+        // Определяем порядок сортировки
+        let orderSort = 'undefined';
+        if (e.target.innerHTML.includes("↑")) {
+            orderSort = 'desc';
+            e.target.innerHTML = e.target.innerHTML.replace("↑", "↓");
+        }
+        if (e.target.innerHTML.includes("↓") && orderSort === 'undefined') {
+            orderSort = 'asc';
+            e.target.innerHTML = e.target.innerHTML.replace("↓", "↑");
+        }
+        if (orderSort === 'undefined') {
+            orderSort = 'asc';
+            e.target.innerHTML += ("↑");
+        }
+
+        // Определяем функцию сравнения
+        let compare;
+        switch (dataType) {
+            case 'number':
+                compare = function (rowA, rowB) {
+                    if (orderSor === 'asc') {
+                        return rowA.cells[colNum].innerHTML - rowB.cells[colNum].innerHTML ? 1 : -1;
+                    } else {
+                        return rowA.cells[colNum].innerHTML - rowB.cells[colNum].innerHTML ? -1 : 1;
+                    }
+                }
+                break;
+            case 'string':
+                compare = function (rowA, rowB) {
+                    if (orderSort === 'asc') {
+                        return rowA.cells[colNum].innerHTML > rowB.cells[colNum].innerHTML ? 1 : -1;
+                    } else {
+                        return rowA.cells[colNum].innerHTML > rowB.cells[colNum].innerHTML ? -1 : 1;
+                    }
+                }
+                break;
+        }
+        rowsArray.sort(compare);
+        tbody.append(...rowsArray);
+    }
+
+</script>
+</body>
+</html>
