@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+<script>
+    // a. В качестве исходных данных сгенерируйте массив строк с элементами вида
+    // «Результат поиска 1», «Результат поиска 2»… «Результат поиска 200».
+    // b. На начальном этапе покажите 20 результатов из этого списка.
+    // c. Если пользователь переместит полосу прокрутки к концу списка, загрузите следующие 20 результатов поиска.
+    // d. Сделайте так, чтобы вставка новых результатов не приводила к смещению уже отображаемых результатов в окне просмотра,
+    // «дрожанию» и прочим визуальным артефактам.
+
+    function searchData() {
+        const resultArray = [];
+        for (let i = 1; i < 201; i++) {
+            resultArray.push('Результат поиска ' + i);
+        }
+        return {
+            currentIndex: 0,
+            resultArray: resultArray
+        };
+    }
+
+    window.onload = () => {
+        const options = {
+            root: null, //root - вся область просмотра, то есть просматриваем всю страницу без отступов
+            rootMargin: '0px',
+            //если наполовину отображается, то активируем
+            threshold: 0.5
+        }
+        // Создаем объект наблюдатель
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                //если элемент сейчас виден на странице
+                if (entry.isIntersecting) {
+                    const item = entry.target;
+                    showResult(searchObj);
+                    observer.unobserve(item);
+                }
+            })
+        }, options);
+
+        function showResult(obj) {
+            for (let i = obj.currentIndex; i < (obj.currentIndex + 20); i++) {
+                document.body.insertAdjacentHTML('beforeend', `<p>${obj.resultArray[i]}</p>`);
+            }
+            obj.currentIndex += 20;
+            const lastElem = document.querySelectorAll("p");
+            if (obj.currentIndex < 200) observer.observe(lastElem[lastElem.length - 1]);
+        }
+
+        // Инициализация
+        const searchObj = searchData();
+        showResult(searchObj);
+    };
+
+</script>
+</body>
+</html>

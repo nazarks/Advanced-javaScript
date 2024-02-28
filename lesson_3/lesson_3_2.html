@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    // Добавьте функциональность сортировки элементов списка, воспользовавшись Drag and Drop.
+    // a. Создайте вертикальный список посредством DOM-элементов <ul> и <li>.
+    // b. Добавьте возможность менять порядок следования элементов в списке путём их
+    // перетаскивания и вставки между другими элементами.
+    // c. В процессе перетаскивания элемента списка на новое место другие элементы списка
+    // должны раздвигаться, чтобы пользователь понимал, какой эффект будет достигнут,
+    // если он отпустит перетаскиваемый элемент на этом месте списка.
+
+    function createUl() {
+        const ulElement = document.createElement('ul');
+        ulElement.classList.add('ul__item');
+        for (let i = 0; i < 20; i++) {
+            const liElement = document.createElement('li');
+            liElement.innerText = `Li elem ${i}`;
+            liElement.classList.add('li__item')
+            ulElement.appendChild(liElement);
+        }
+        document.body.appendChild(ulElement);
+    }
+
+    createUl()
+    const ulElement = document.querySelector(`.ul__item`);
+    const liElements = ulElement.querySelectorAll(`.li__item`);
+
+    // Перебираем все элементы списка и присваиваем нужное значение
+    for (const task of liElements) {
+        task.draggable = true;
+    }
+
+    ulElement.addEventListener(`dragstart`, (e) => {
+        e.target.classList.add(`selected`);
+    })
+
+    ulElement.addEventListener(`dragend`, (e) => {
+        e.target.classList.remove(`selected`);
+    });
+
+    ulElement.addEventListener(`dragover`, (e) => {
+        // Разрешаем сбрасывать элементы в эту область
+        e.preventDefault();
+
+        // Находим перемещаемый элемент
+        const activeElement = ulElement.querySelector(`.selected`);
+        // Находим элемент, над которым в данный момент находится курсор
+        const currentElement = e.target;
+        // Проверяем, что событие сработало:
+        // 1. не на том элементе, который мы перемещаем,
+        // 2. именно на элементе списка
+        const isMovable = activeElement !== currentElement &&
+            currentElement.classList.contains(`li__item`);
+        // Если нет, прерываем выполнение функции
+        if (!isMovable) {
+            return;
+        }
+
+        // Находим элемент, перед которым будем вставлять
+        const nextElement = (currentElement === activeElement.nextElementSibling) ?
+            currentElement.nextElementSibling :
+            currentElement;
+        // Вставляем activeElement перед nextElement
+        ulElement.insertBefore(activeElement, nextElement);
+    });
+
+</script>
+</body>
+</html>

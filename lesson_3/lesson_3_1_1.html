@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+<script>
+    // a. В качестве исходных данных сгенерируйте массив строк с элементами вида
+    // «Результат поиска 1», «Результат поиска 2»… «Результат поиска 200».
+    // b. На начальном этапе покажите 20 результатов из этого списка.
+    // c. Если пользователь переместит полосу прокрутки к концу списка, загрузите следующие 20 результатов поиска.
+    // d. Сделайте так, чтобы вставка новых результатов не приводила к смещению уже отображаемых результатов в окне просмотра,
+    // «дрожанию» и прочим визуальным артефактам.
+
+    function searchData() {
+        const resultArray = []
+        for (let i = 1; i < 201; i++) {
+            resultArray.push('Результат поиска ' + i);
+        }
+        return {
+            currentIndex: 0,
+            resultArray: resultArray
+        };
+    }
+
+    function makeReactionOnScroll() {
+        while (1) {
+            let bottom = document.documentElement.getBoundingClientRect().bottom;
+            if (bottom > document.documentElement.clientHeight + 100 || searchObj.currentIndex >= 200) break;
+            for (let i = searchObj.currentIndex; i < (searchObj.currentIndex + 20); i++) {
+                document.body.insertAdjacentHTML('beforeend', `<p>${searchObj.resultArray[i]}</p>`)
+            }
+            searchObj.currentIndex += 20
+        }
+    }
+
+    window.addEventListener('scroll', makeReactionOnScroll);
+    searchObj = searchData()
+    makeReactionOnScroll();
+
+
+</script>
+</body>
+</html>
